@@ -133,8 +133,8 @@ netdial(int domain, int proto, const char *local, int local_port, const char *se
     int s, saved_errno;
 
 #if defined(HAVE_VSOCK)
-    if (domain == AF_VSOCK) {
-        return vsockdial(server, port, timeout);
+    if (domain == AF_VSOCK || domain == AF_VSOCKX) {
+        return vsockdial(server, port, timeout, domain);
     }
 #endif /* HAVE_VSOCK */
 
@@ -237,8 +237,8 @@ netannounce(int domain, int proto, const char *local, int port)
     int s, opt, saved_errno;
 
 #if defined(HAVE_VSOCK)
-    if (domain == AF_VSOCK) {
-        return vsockannounce(local, port);
+    if (domain == AF_VSOCK || domain == AF_VSOCKX) {
+        return vsockannounce(local, port, domain);
     }
 #endif /* HAVE_VSOCK */
 

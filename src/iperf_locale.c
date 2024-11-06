@@ -107,6 +107,7 @@ const char usage_longstr[] = "Usage: iperf3 [-s|-c host] [options]\n"
                            "  -B, --bind      <host>    bind to the interface associated with the address <host>\n"
 #if defined(HAVE_VSOCK)
                            "  --vsock                   use VSOCK rather than TCP\n"
+                           "  --vsockx                  use VSOCKX rather than TCP\n"
 #endif /* HAVE_VSOCK */
                            "  -V, --verbose             more detailed output\n"
                            "  -J, --json                output in JSON format\n"

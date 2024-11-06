@@ -825,7 +825,7 @@ iperf_on_connect(struct iperf_test *test)
             inet_ntop(AF_INET, &sa_inP->sin_addr, ipr, sizeof(ipr));
 	    port = ntohs(sa_inP->sin_port);
 #if defined(HAVE_VSOCK)
-        } else if (sockdomain == AF_VSOCK) {
+        } else if (sockdomain == AF_VSOCK || sockdomain == AF_VSOCKX) {
 	    sa_vm = (struct sockaddr_vm *) &sa;
 	    sprintf(ipr, "%u", sa_vm->svm_cid);
 	    port = sa_vm->svm_port;
@@ -933,6 +933,7 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
 #endif
 #if defined(HAVE_VSOCK)
         {"vsock", no_argument, NULL, OPT_VSOCK},
+        {"vsockx", no_argument, NULL, OPT_VSOCKX},
 #endif /* HAVE_VSOCK */
 	{"pidfile", required_argument, NULL, 'I'},
 	{"logfile", required_argument, NULL, OPT_LOGFILE},
@@ -1060,6 +1061,16 @@ iperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
             case OPT_VSOCK:
 #if defined(HAVE_VSOCK)
                 test->settings->domain = AF_VSOCK;
+                set_protocol(test, Pvsock);
+                break;
+#else /* !HAVE_VSOCK */
+                i_errno = IEUNIMP;
+                return -1;
+#endif /* HAVE_VSOCK */
+
+            case OPT_VSOCKX:
+#if defined(HAVE_VSOCK)
+                test->settings->domain = AF_VSOCKX;
                 set_protocol(test, Pvsock);
                 break;
 #else /* !HAVE_VSOCK */
@@ -2421,7 +2432,7 @@ connect_msg(struct iperf_stream *sp)
         lport = ntohs(((struct sockaddr_in *) &sp->local_addr)->sin_port);
         rport = ntohs(((struct sockaddr_in *) &sp->remote_addr)->sin_port);
 #if defined(HAVE_VSOCK)
-    } else if (sockdomain == AF_VSOCK) {
+    } else if (sockdomain == AF_VSOCK || sockdomain == AF_VSOCKX) {
 	sprintf(ipl, "%u", ((struct sockaddr_vm *) &sp->local_addr)->svm_cid);
 	sprintf(ipr, "%u", ((struct sockaddr_vm *) &sp->remote_addr)->svm_cid);
 	lport = ((struct sockaddr_vm *) &sp->local_addr)->svm_port;

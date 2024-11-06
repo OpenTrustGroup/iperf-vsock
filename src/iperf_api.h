@@ -86,6 +86,7 @@ typedef uint64_t iperf_size_t;
 #define OPT_SERVER_BITRATE_LIMIT 21
 #define OPT_TIMESTAMPS 22
 #define OPT_VSOCK 30
+#define OPT_VSOCKX 31
 
 /* states */
 #define TEST_START 1

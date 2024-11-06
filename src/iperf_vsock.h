@@ -30,6 +30,8 @@
 #ifndef        IPERF_VSOCK_H
 #define        IPERF_VSOCK_H
 
+#define AF_VSOCKX AF_DECnet
+
 /**
  * iperf_vsock_accept -- accepts a new VSOCK connection
  * on the listener socket for VSOCK tests

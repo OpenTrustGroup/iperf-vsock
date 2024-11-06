@@ -149,7 +149,7 @@ vsock_sockaddr(const char *cid_str, int port, int listen, socklen_t *len)
 }
 
 int
-vsockannounce(const char *local, int port)
+vsockannounce(const char *local, int port, int domain)
 {
 	struct sockaddr *sa;
 	socklen_t sa_len;
@@ -165,7 +165,7 @@ vsockannounce(const char *local, int port)
 		goto err;
 	}
 
-	listen_fd = socket(sa->sa_family, SOCK_STREAM, 0);
+	listen_fd = socket(domain, SOCK_STREAM, 0);
 	if (listen_fd < 0) {
 		goto err;
 	}
@@ -192,7 +192,7 @@ err:
 }
 
 int
-vsockdial(const char *server, int port, int timeout)
+vsockdial(const char *server, int port, int timeout, int domain)
 {
 	struct sockaddr *sa;
 	socklen_t sa_len;
@@ -202,7 +202,7 @@ vsockdial(const char *server, int port, int timeout)
 	if (!sa)
 		return -1;
 
-	fd = socket(sa->sa_family, SOCK_STREAM, 0);
+	fd = socket(domain, SOCK_STREAM, 0);
 	if (fd < 0) {
 		return -1;
 	}
@@ -338,7 +338,7 @@ iperf_vsock_connect(struct iperf_test *test)
 {
 	int fd;
 
-	fd = vsockdial(test->server_hostname, test->server_port, -1);
+	fd = vsockdial(test->server_hostname, test->server_port, -1, test->settings->domain);
 	if (fd < 0) {
 		goto err;
 	}
